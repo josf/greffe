@@ -4,6 +4,12 @@
    [om.dom :as dom :include-macros true]
    [cljs-xml.core :as cx]))
 
+(defn element-attributes-component [attrs owner]
+  (reify
+    om/IRender
+    (render [_]
+      (apply dom/ul #js {:className "attributes"}
+       (map #(dom/li nil (str (first %) " " (second %))) attrs)))))
 
 
 (defmulti element-component (fn [el]
