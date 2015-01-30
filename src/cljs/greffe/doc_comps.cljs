@@ -37,11 +37,15 @@
   (reify
     om/IRenderState
     (render-state [_ state]
-      (dom/div #js {:className (str "xml-" (name (:tag elem)))}
-        (name (:tag elem))
-        (when (pos? (count (:content elem)))
-          (apply dom/div nil
-           (om/build-all element-component (:content elem))))))))
+      (dom/div #js {:className (str "xml-" (name (:tag elem)) " tei-block col-md-12")}
+        (dom/div #js {:className "row"}
+         (dom/div #js {:className "block-data col-md-1"}
+           (dom/div #js {:className "name"}
+             (name (:tag elem)))
+           (om/build element-attributes-component (:attrs elem)))
+         (when (pos? (count (:content elem)))
+           (apply dom/div #js {:className "block-contents col-md-10"}
+             (om/build-all element-component (:content elem)))))))))
 
 (defmethod element-component :wtf [elem owner]
   (reify

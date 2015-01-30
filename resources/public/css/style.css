@@ -1,3 +1,25 @@
 h1 {
   text-decoration: underline;
 }
+
+
+div.block-data {
+    color: gray;
+    font-size: 7pt;
+}
+
+div.tei-block {
+    border: grey 1px dotted;
+}
+div.block-contents {
+    padding-top: 0px;
+}
+
+ul.attributes {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+ul.attributes li {
+    padding-left: 0;
+}
