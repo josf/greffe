@@ -54,8 +54,7 @@
         (render [_]
           (.log js/console (:body app))
           (dom/div nil
-            (dom/h1 nil (:text app))
-            (dom/p nil (count (:body app)))
+            (dom/h1 nil "Greffe")
             (dom/div nil
              (om/build dc/element-component (:body app)))))))
     app-state
