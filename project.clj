@@ -18,7 +18,8 @@
                  [com.cemerick/piggieback "0.1.3"]
                  [weasel "0.4.0-SNAPSHOT"]
                  [leiningen "2.5.0"]
-                 [cljs-xml "0.1.0-SNAPSHOT"]]
+                 [cljs-xml "0.1.0-SNAPSHOT"]
+                 [gmark "0.1.0-SNAPSHOT"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
             [lein-environ "1.0.0"]

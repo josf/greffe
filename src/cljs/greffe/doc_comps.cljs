@@ -2,7 +2,9 @@
   (:require
    [om.core :as om :include-macros true]
    [om.dom :as dom :include-macros true]
-   [cljs-xml.core :as cx]))
+   [cljs-xml.core :as cx]
+   [gmark.core :as gm]
+   [gmark.tei-elems :as gmt]))
 
 (defn element-attributes-component [attrs owner]
   (reify
