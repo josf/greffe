@@ -52,7 +52,6 @@
         
         om/IRender
         (render [_]
-          (.log js/console (:body app))
           (dom/div nil
             (dom/h1 nil "Greffe")
             (dom/div nil
