@@ -7,6 +7,8 @@
    [gmark.tei-elems :as gmt]
    [greffe.markup :as mk]))
 
+(def tei (gmt/tagtypes mk/markup))
+
 (defn element-attributes-component [attrs owner]
   (reify
     om/IRender
@@ -70,7 +72,7 @@
            (om/build element-attributes-component (:attrs elem))
            (when (:showButton state)
              (dom/div #js {:className "controls"}
-               (let [elem-as-text (gm/to-gmark elem  gmt/tei)]
+               (let [elem-as-text (gm/to-gmark elem tei)]
                  (dom/a #js {:onClick (fn [ev]
                                         (om/set-state! owner :editContent elem-as-text)
                                         (om/set-state!
