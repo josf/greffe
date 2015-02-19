@@ -26,7 +26,16 @@
                                  (and
                                    (contains? val :content)
                                    (contains? val :tag))
-                                 :elem
+                                 (let [el-type (get-in mk/markup [(:tag val) :type])]
+                                   (cond
+                                     (#{:container :multi-chunk :chunk} el-type)
+                                     :elem
+
+                                     (= :inner el-type)
+                                     :inner-elem
+
+                                     (= :empty el-type)
+                                     :empty-elem))
 
                                  true
                                  :wtf))))
@@ -36,7 +45,7 @@
   (reify
     om/IRenderState
     (render-state [_ state]
-      (dom/div nil elem))))
+      (dom/span #js {:className "xml-text-element"} elem))))
 
 (defmethod element-component :elem [elem owner]
   (reify
@@ -99,6 +108,22 @@
          (when (pos? (count (:content elem)))
            (apply dom/div #js {:className "block-contents col-md-10"}
              (om/build-all element-component (:content elem)))))))))
+
+
+(defmethod element-component :inner-elem [elem owner]
+  (reify
+    om/IRender
+    (render [_]
+      (apply dom/span #js {:className (str "xml-" (name (:tag elem)) " tei-inner")}
+        (om/build-all element-component (:content elem))))))
+
+
+(defmethod element-component :empty-elem [elem owner]
+  (reify
+    om/IRender
+    (render [_]
+      (dom/span #js {:className (str "xml-" (name (:tag elem)) " tei-empty")}
+        " "))))
 
 (defmethod element-component :wtf [elem owner]
   (reify
