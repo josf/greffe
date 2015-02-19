@@ -93,7 +93,7 @@
                   "Editer"))))
            (when (:editText state)
              (dom/textarea #js {:value (:editContent state)
-                                :cols "50" :rows "10"
+                                :cols "50" :rows "3"
                              :onChange
                                 (fn [ev]
                                   (let [new-val (-> ev .-target .-value)]
