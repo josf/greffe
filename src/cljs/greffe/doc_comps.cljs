@@ -16,29 +16,31 @@
       (apply dom/ul #js {:className "attributes"}
        (map #(dom/li nil (str (first %) " " (second %))) attrs)))))
 
+(defn dispatch-on-element-type [el]
+  (let [val (om/value el)]
+    (cond
+      (string? val)
+      :text
+       
+      (and
+        (contains? val :content)
+        (contains? val :tag))
+      (let [el-type (get-in mk/markup [(:tag val) :type])]
+        (cond
+          (#{:container :multi-chunk :chunk} el-type)
+          :elem
 
-(defmulti element-component (fn [el]
-                              (let [val (om/value el)]
-                               (cond
-                                 (string? val)
-                                 :text
-                                
-                                 (and
-                                   (contains? val :content)
-                                   (contains? val :tag))
-                                 (let [el-type (get-in mk/markup [(:tag val) :type])]
-                                   (cond
-                                     (#{:container :multi-chunk :chunk} el-type)
-                                     :elem
+          (= :inner el-type)
+          :inner-elem
+          
+          (= :empty el-type)
+          :empty-elem))
 
-                                     (= :inner el-type)
-                                     :inner-elem
+      true
+      :wtf)))
 
-                                     (= :empty el-type)
-                                     :empty-elem))
 
-                                 true
-                                 :wtf))))
+(defmulti element-component dispatch-on-element-type)
 
 
 (defmethod element-component :text [elem owner]
