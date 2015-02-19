@@ -3,23 +3,30 @@
 
 (def markup
   {:body {:type :container
-          :contains [:div]}
+          :contains [:div]
+          :html "div"}
    :text {:type :container
-          :contains [:div]}
+          :contains [:div]
+          :html "div"}
    :div {:type :container
-         :contains [:div :head :lg]}
+         :contains [:div :head :lg]
+         :html "div"}
    :head {:type :chunk
           :contains [:note]
-          :line-token "*"}
+          :line-token "*"
+          :html "h2"}
    :lg {:type :multi-chunk
-        :contains [:l]}
+        :contains [:l]
+        :html "ul"}
    :l {:type :chunk
        :contains [:rhyme :caesura :note]
-       :line-token "-"}
+       :line-token "-"
+       :html "li"}
    :note {:type :inner
           :begin-token "{{"
           :end-token "}}"
-          :contains []}
+          :contains []
+          :html "strong"}
    :caesura {:type :empty
              :begin-token "|"
              :end-token "|"
