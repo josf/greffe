@@ -84,13 +84,14 @@
            (when (:showButton state)
              (dom/div #js {:className "controls"}
                (let [elem-as-text (gm/to-gmark elem tei)]
-                 (dom/a #js {:onClick (fn [ev]
-                                        (om/set-state! owner :editContent elem-as-text)
-                                        (om/set-state!
-                                          owner
-                                          :editText
-                                          (not (om/get-state owner :editText))))}
-                  "Editer"))))
+                 (dom/a #js {:onClick
+                             (fn [ev]
+                               (om/set-state! owner :editContent elem-as-text)
+                               (om/set-state!
+                                 owner
+                                 :editText
+                                 (not (om/get-state owner :editText))))}
+                   "Editer"))))
            (when (:editText state)
              (dom/textarea #js {:value (:editContent state)
                                 :cols "50" :rows "3"
