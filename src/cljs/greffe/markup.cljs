@@ -27,11 +27,22 @@
    :rhyme {:type :inner
            :begin-token "//"
            :end-token "//"
-           :contains []}})
-
+           :contains []
+           :html "em"}})
 
 (def inner-tokens
-  {"//" {:tag :rhyme
-         :closing-tag "//"}
-   "|" {:tag :caesura
-        :no-content true}})
+  (->>  markup
+   (filter
+     (fn [[_ descrip]]
+       (#{:inner :empty} (:type descrip))))
+   (map
+     (fn [[tag descrip]]
+       (let [info {:tag tag}]
+        [(:begin-token descrip)
+         (if (= :empty (:type descrip))
+           (assoc info :no-content true)
+           (assoc info :closing-tag
+             (or
+               (:end-token descrip)
+               (:begin-token descrip))))])))
+   (into {})))
