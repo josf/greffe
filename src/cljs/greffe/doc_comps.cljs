@@ -41,7 +41,8 @@
     om/IInitState
     (init-state [_] {:hoverTimeout nil
                      :showButton false
-                     :editText false})
+                     :editText false
+                     :editContent nil})
     
     om/IRenderState
     (render-state [_ state]
@@ -69,18 +70,21 @@
            (om/build element-attributes-component (:attrs elem))
            (when (:showButton state)
              (dom/div #js {:className "controls"}
-               (dom/a #js {:onClick (fn [ev]
-                                      (om/set-state!
-                                        owner
-                                        :editText
-                                        (not (om/get-state owner :editText))))}
-                 "Editer")))
+               (let [elem-as-text (gm/to-gmark elem  gmt/tei)]
+                 (dom/a #js {:onClick (fn [ev]
+                                        (om/set-state! owner :editContent elem-as-text)
+                                        (om/set-state!
+                                          owner
+                                          :editText
+                                          (not (om/get-state owner :editText))))}
+                  "Editer"))))
            (when (:editText state)
-             (dom/textarea #js {:value (gm/to-gmark elem gmt/tei)
+             (dom/textarea #js {:value (:editContent state)
                                 :cols "50" :rows "10"
                              :onChange
                                 (fn [ev]
                                   (let [new-val (-> ev .-target .-value)]
+                                    (om/set-state! owner :editContent new-val)
                                     (om/transact! elem
                                       (fn [el]
                                         (if-let [new-el

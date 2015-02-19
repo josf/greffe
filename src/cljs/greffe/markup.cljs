@@ -3,7 +3,7 @@
 
 
 (def inner-tokens
-  {"//" {:tag :em
+  {"//" {:tag :rhyme
          :closing-tag "//"}
    "|" {:tag :caesura
         :no-content true}})
