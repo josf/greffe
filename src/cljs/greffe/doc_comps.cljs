@@ -4,7 +4,8 @@
    [om.dom :as dom :include-macros true]
    [cljs-xml.core :as cx]
    [gmark.core :as gm]
-   [gmark.tei-elems :as gmt]))
+   [gmark.tei-elems :as gmt]
+   [greffe.markup :as mk]))
 
 (defn element-attributes-component [attrs owner]
   (reify
