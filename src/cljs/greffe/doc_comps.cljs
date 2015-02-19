@@ -43,8 +43,8 @@
     om/IInitState
     (init-state [_] {:hoverTimeout nil
                      :showButton false
-                     :editText false
-                     :editContent nil})
+                     :editText false    ; are we in editing mode?
+                     :editContent nil}) ; "cache" for editing content
     
     om/IRenderState
     (render-state [_ state]
