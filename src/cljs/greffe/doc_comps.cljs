@@ -76,12 +76,20 @@
                                         (not (om/get-state owner :editText))))}
                  "Editer")))
            (when (:editText state)
-             (dom/textarea #js {
+             (dom/textarea #js {:value (gm/to-gmark elem gmt/tei)
                                 :cols "50" :rows "10"
                              :onChange
-                             #(let [new-val (-> % .-target .-value)]
-                                (om/transact! elem (fn [el] new-val)))}
-                (gm/to-gmark elem gmt/tei))))
+                                (fn [ev]
+                                  (let [new-val (-> ev .-target .-value)]
+                                    (om/transact! elem
+                                      (fn [el]
+                                        (if-let [new-el
+                                                 (gm/parse-gmark-text
+                                                   new-val
+                                                   mk/inner-tokens
+                                                   (assoc el :content []))]
+                                          new-el
+                                          el)))))})))
          (when (pos? (count (:content elem)))
            (apply dom/div #js {:className "block-contents col-md-10"}
              (om/build-all element-component (:content elem)))))))))
