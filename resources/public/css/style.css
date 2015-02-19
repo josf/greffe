@@ -31,3 +31,33 @@ span.xml-rhyme {
 span.tei-empty {
     background-color: red;
 }
+
+textarea {
+    font-size: 12pt;
+    color: #000;
+}
+
+.xml-output {
+    font-family: monospace;
+    font-size: 12pt;
+}
+
+.xml-output .tag-name {
+    color: red;
+}
+.angle-bracket {
+    font-weight: bold;
+    color: grey; 
+}
+
+.block-contents {
+    margin-left: 10px;
+}
+
+span.attribute-name {
+    padding-left: 0.5em;
+    color: blue;
+}
+span.attribute-value {
+    color: green;
+}

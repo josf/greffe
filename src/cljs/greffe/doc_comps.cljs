@@ -133,3 +133,83 @@
     (render [_]
       (.log js/console "WTF?")
       (dom/div nil (str "WTF? " (type (om/value elem)) " " elem)))))
+
+
+
+(defn xml-attributes-component [atts owner]
+  (reify
+    om/IRender
+    (render [_]
+      (apply dom/span #js {:className "attributes"}
+        (mapcat
+          (fn [[k v]]
+            [(dom/span #js {:className "attribute-name"} (name k))
+             (dom/span #js {:className "attribute-equals"} "=")
+             (dom/span #js {:className "attribute-quote"} "\"")
+             (dom/span #js {:className "attribute-value"} v)
+             (dom/span #js {:className "attribute-quote"} "\"")])
+          atts)))))
+
+(defmulti xml-display dispatch-on-element-type)
+
+(defmethod xml-display :elem [elem owner]
+  (reify
+    om/IRender
+    (render [_]
+      (dom/div #js {:className "xml-output"}
+        (dom/span #js {:className "tag"}
+          (dom/span #js {:className "angle-bracket"} "<")
+          (dom/span #js {:className "tag-name"} (name (:tag elem)))
+          (when-not (empty? (:attrs elem))
+            (om/build xml-attributes-component (:attrs elem)))
+          (dom/span #js {:className "angle-bracket"} ">")
+
+          (apply dom/div #js {:className "block-contents"}
+            (om/build-all xml-display (:content elem)))
+          (dom/span #js {:className "angle-bracket"} "</")
+          (dom/span #js {:className "tag-name"} (name (:tag elem)))
+          (dom/span #js {:className "angle-bracket"} ">"))))))
+
+(defmethod xml-display :inner-elem [elem owner]
+  (reify
+    om/IRender
+    (render [_]
+      (dom/span #js {:className "xml-output"}
+        (dom/span #js {:className "tag"}
+          (dom/span #js {:className "angle-bracket"} "<")
+          (dom/span #js {:className "tag-name"} (name (:tag elem)))
+          (when-not (empty? (:attrs elem))
+            (om/build xml-attributes-component (:attrs elem)))
+          (dom/span #js {:className "angle-bracket"} ">")
+
+          (apply dom/span nil (om/build-all xml-display (:content elem)))
+          (dom/span #js {:className "angle-bracket"} "</")
+          (dom/span #js {:className "tag-name"} (name (:tag elem)))
+          (dom/span #js {:className "angle-bracket"} ">"))))))
+
+(defmethod xml-display :empty-elem [elem owner]
+  (reify
+    om/IRender
+    (render [_]
+      (dom/span #js {:className "xml-output empty"}
+        (dom/span #js {:className "tag"}
+          (dom/span #js {:className "angle-bracket"} "<")
+          (dom/span #js {:className "tag-name"}  (name (:tag elem)))
+          (when-not (empty? (:attrs elem))
+            (om/build xml-attributes-component (:attrs elem)))
+          (dom/span #js {:className "angle-bracket"} "/>"))))))
+
+(defmethod xml-display :text [elem owner]
+  (reify
+    om/IRender
+    (render [_]
+      (dom/span #js {:className "xml-output text"}
+        elem))))
+
+(defmethod xml-display :wtf [elem owner]
+  (reify
+    om/IRender
+    (render [_]
+      (.log js/console "WTF?")
+      (dom/div nil (str "WTF? " (type (om/value elem)) " " elem)))))
+
