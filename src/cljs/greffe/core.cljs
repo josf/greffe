@@ -54,9 +54,12 @@
         (render [_]
           (dom/div nil
             (dom/h1 nil "Greffe")
-            (dom/div #js {:id "edit"}
-              (om/build dc/element-component (:body app)))
-            (dom/div #js {:id "xml"}
-              (om/build dc/xml-display (:body app)))))))
+            (when (:body app)
+              (dom/div #js {:id "edit"}
+                (om/build dc/element-component (:body app))))
+            
+            (when (:body app)
+              (dom/div #js {:id "xml"}
+                (om/build dc/xml-display (:body app))))))))
     app-state
     {:target (. js/document (getElementById "app"))}))
