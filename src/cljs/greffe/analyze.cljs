@@ -1,5 +1,7 @@
 (ns greffe.analyze
-  (:require [clojure.zip :as zip]))
+  (:require [clojure.zip :as zip]
+            [gmark.tei-elems :as gmt]
+            [greffe.markup :as mk]))
 
 (def max-attr-count 2)
 (def max-child-count 2)
