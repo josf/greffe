@@ -27,8 +27,9 @@
 
             (go-loop []
               (let [xml-doc (<! xml-chan)
-                    data-doc (cx/parse xml-doc)
-                    doc-zip (zip/xml-zip data-doc)]
+                    doc-zip (-> xml-doc
+                              cx/parse
+                              zip/xml-zip)]
                 (om/transact! app
                   (fn [a]
                     (let [nodes (take-while
