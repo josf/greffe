@@ -6,6 +6,9 @@
 (def max-attr-count 2)
 (def max-child-count 2)
 
+(defn zipper? [loc]
+  (contains? loc :zip/make-node))
+
 (defn attributes-text-editable? [node]
   (if (and
         {:attrs node}
