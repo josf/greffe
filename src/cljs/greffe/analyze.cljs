@@ -24,11 +24,23 @@
       true)))
 
 
-(defn editable-type [loc]
+(defn known-elem? [node tag-types]
+    {:pre [(map? tag-types)]}
+    "we obviously can't edit it if we don't know what it is."
+  (contains? tag-types (:tag node)))
+
+(defn editable-type [loc tag-types]
   (let [n (zip/node loc)]
    (cond
      (not (attributes-text-editable? n))
-     :no-text)))
+     :no-text
+
+     (too-complicated? (zip/node loc))
+     :no-text
+
+     (not (known-elem? (zip/node loc) tag-types))
+     :no-text
+     )))
 
 
 
