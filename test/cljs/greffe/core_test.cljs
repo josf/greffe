@@ -4,7 +4,8 @@
    [greffe.core :as gc]))
 
 (deftest test-the-test
-  (is (= 1 1))
-  (is (= 1 5)))
+  (is (= 1 1)))
+
+
 
 
