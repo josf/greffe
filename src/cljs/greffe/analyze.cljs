@@ -11,8 +11,8 @@
 
 (defn attributes-text-editable? [node]
   (if (and
-        {:attrs node}
-        (> (count {:attrs node}) max-attr-count))
+        (:attrs node)
+        (> (count (:attrs node)) max-attr-count))
     false
     true))
 
