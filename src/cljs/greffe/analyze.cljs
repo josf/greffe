@@ -33,17 +33,36 @@
   (contains? tag-types (:tag node)))
 
 (defn editable-type [loc tag-types]
-  (let [n (zip/node loc)]
-   (cond
-     (not (attributes-text-editable? n))
-     :no-text
+  "Returns the edit status of the element."
+   (let [n (zip/node loc)]
+    (cond
+      (not (known-elem? (zip/node loc) tag-types))
+      :unknown-element
 
-     (too-complicated? (zip/node loc))
-     :no-text
+      
+      (not (attributes-text-editable? n))
+      :no-text-edit
 
-     (not (known-elem? (zip/node loc) tag-types))
-     :no-text
+
+      (too-complicated? (zip/node loc))
+      :no-text-edit
+
+      true
+      :edit
      )))
 
 
 
+(defn edit-check [loc tag-types]
+   "Checks an entire tree"
+  (loop [l loc]
+    (cond
+      (zip/end? l)
+      l
+
+      (not (zip/branch? l))
+      (recur (zip/next l))
+
+      true
+      (let [ed-type (editable-type l tag-types)]
+        (recur (zip/next (zip/edit l #(assoc % :edit-type ed-type))))))))
