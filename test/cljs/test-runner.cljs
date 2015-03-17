@@ -15,4 +15,5 @@
 (defn runner []
   (test/run-tests
    (test/empty-env ::test/default)
-   'greffe.core-test))
+   'greffe.core-test
+   'greffe.analyze-test))
