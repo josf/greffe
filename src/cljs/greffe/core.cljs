@@ -6,7 +6,9 @@
             [cljs.core.async :refer [<! chan put! sliding-buffer alts! mult tap untap]]
             [cljs-xml.core :as cx]
             [greffe.net :as net]
-            [greffe.doc-comps :as dc]))
+            [greffe.doc-comps :as dc]
+            [greffe.markup :as mk]
+            [greffe.analyze :as az]))
 
 (defonce app-state (atom {:text "Hello Chestnut!"
                           :head nil
@@ -29,7 +31,8 @@
               (let [xml-doc (<! xml-chan)
                     doc-zip (-> xml-doc
                               cx/parse
-                              zip/xml-zip)]
+                              zip/xml-zip
+                              (az/edit-check mk/markup))]
                 (om/transact! app
                   (fn [a]
                     (let [locs (take-while
