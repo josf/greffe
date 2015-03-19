@@ -25,10 +25,16 @@
       (and
         (contains? val :content)
         (contains? val :tag))
-      (let [el-type (get-in mk/markup [(:tag val) :type])]
+      (let [el-type (get-in mk/markup [(:tag val) :type])
+            edit-type (:edit-type val)]
         (cond
+          (= :unknown-element edit-type)
+          :unknown-element
+
           (#{:container :multi-chunk :chunk} el-type)
-          :elem
+          (if (= edit-type :no-text-edit)
+            :elem-no-edit
+            :elem)
 
           (= :inner el-type)
           :inner-elem
@@ -42,14 +48,31 @@
 
 (defmulti element-component dispatch-on-element-type)
 
-
 (defmethod element-component :text [elem owner]
   (reify
     om/IRenderState
     (render-state [_ state]
       (dom/span #js {:className "xml-text-element"} elem))))
 
+
+
+(defmethod element-component :elem-no-edit [elem owner]
+  (reify
+    om/IRender
+    (render [_]
+      (dom/div #js {:className
+                    (str "xml-" (name (:tag elem)) " tei-block col-md-12 no-edit")}
+        (dom/div #js {:className "row"}
+          (dom/div #js {:className "block-data col-md-1"}
+            (dom/div #js {:className "name"} (name (:tag elem)))
+            (om/build element-attributes-component (:attrs elem)))
+          (when (pos? (count (:content elem)))
+            (apply dom/div #js {:className "block-contents col-md-10"}
+              (om/build-all element-component (:content elem)))))))))
+
+
 (defmethod element-component :elem [elem owner]
+  "This is for editable nodes, assumes :edit-type is :edit."
   (reify
     om/IInitState
     (init-state [_] {:hoverTimeout nil
@@ -112,7 +135,6 @@
            (apply dom/div #js {:className "block-contents col-md-10"}
              (om/build-all element-component (:content elem)))))))))
 
-
 (defmethod element-component :inner-elem [elem owner]
   (reify
     om/IRender
@@ -151,7 +173,14 @@
              (dom/span #js {:className "attribute-quote"} "\"")])
           atts)))))
 
-(defmulti xml-display dispatch-on-element-type)
+
+(defn dispatch-on-element-type-xml [el]
+  (let [t (dispatch-on-element-type el)]
+    (if (= :elem-no-edit t)
+      :elem
+      t)))
+
+(defmulti xml-display dispatch-on-element-type-xml)
 
 (defmethod xml-display :elem [elem owner]
   (reify
@@ -211,6 +240,6 @@
   (reify
     om/IRender
     (render [_]
-      (.log js/console "WTF?")
-      (dom/div nil (str "WTF? " (type (om/value elem)) " " elem)))))
+      (.log js/console "xml WTF?")
+      (dom/div nil (str "xml WTF? " (type (om/value elem)) " " elem)))))
 
