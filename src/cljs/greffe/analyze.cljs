@@ -58,7 +58,7 @@
   (loop [l loc]
     (cond
       (zip/end? l)
-      l
+      (zip/xml-zip (zip/root l))        ;reinitialize the zipper
 
       (not (zip/branch? l))
       (recur (zip/next l))

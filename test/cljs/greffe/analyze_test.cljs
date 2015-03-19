@@ -107,7 +107,12 @@
         checked-all-editable (az/edit-check
                                all-editable-zip
                                tag-types)]
-    (is (= :edit (:edit-type (zip/root checked-all-editable))))
+    (is (contains? (meta (zip/vector-zip [:a :b])) :zip/make-node)
+      "testing the test")
+    (is (contains? (meta checked-all-editable) :zip/make-node)
+      "returns a zipper")
+    (is (= :edit (:edit-type (zip/node checked-all-editable)))
+      "should be an editable zipper")
     (is (= :no-text-edit
           (:edit-type
            (zip/root (az/edit-check many-attrs-zip tag-types)))))))
