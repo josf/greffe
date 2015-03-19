@@ -67,3 +67,7 @@
                 (om/build dc/xml-display (:body app))))))))
     app-state
     {:target (. js/document (getElementById "app"))}))
+
+;;; this needs to be commented out for running tests
+(main)
+
