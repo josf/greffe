@@ -32,18 +32,18 @@
                               zip/xml-zip)]
                 (om/transact! app
                   (fn [a]
-                    (let [nodes (take-while
+                    (let [locs (take-while
                                   (complement zip/end?)
                                   (iterate zip/next doc-zip))]
                      (assoc a
                        :body
                        (zip/node
                         (first
-                          (filter #(= :body (:tag (zip/node %))) nodes)))
+                          (filter #(= :body (:tag (zip/node %))) locs)))
                        :head
                        (zip/node
                         (first
-                          (filter #(= :teiHeader (:tag (zip/node %))) nodes)))))))))
+                          (filter #(= :teiHeader (:tag (zip/node %))) locs)))))))))
 
            ;; get our doc
            (net/get-xml
