@@ -7,7 +7,7 @@
   :source-paths ["src/clj" "src/cljs"]
 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-3126" :scope "provided"]
+                 [org.clojure/clojurescript "0.0-3169" :scope "provided"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [ring "1.3.2"]
                  [ring/ring-defaults "0.1.4"]
@@ -16,7 +16,7 @@
                  [org.omcljs/om "0.8.8"]
                  [figwheel "0.2.5"]
                  [environ "1.0.0"]
-                 [com.cemerick/piggieback "0.1.5"]
+                 [com.cemerick/piggieback "0.2.0"]
                  [weasel "0.6.0"]
                  [leiningen "2.5.1"]
                  [cljs-xml "0.1.0-SNAPSHOT"]
@@ -50,7 +50,9 @@
                                  :pretty-print true
                                  :output-to "target/testable.js"}}}}
 
-  :profiles {:dev {:repl-options {:init-ns greffe.server
+  :profiles {:dev
+             {:dependencies [[org.clojure/tools.nrepl "0.2.10"]]
+              :repl-options {:init-ns greffe.server
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
 
                    :plugins [[lein-figwheel "0.1.4-SNAPSHOT"]]
