@@ -106,15 +106,16 @@
            (om/build element-attributes-component (:attrs elem))
            (when (:showButton state)
              (dom/div #js {:className "controls"}
-               (let [elem-as-text (gm/to-gmark elem tei)]
-                 (dom/a #js {:onClick
-                             (fn [ev]
-                               (om/set-state! owner :editContent elem-as-text)
-                               (om/set-state!
-                                 owner
-                                 :editText
-                                 (not (om/get-state owner :editText))))}
-                   "Editer"))))
+               (dom/a #js {:onClick
+                           (fn [ev]
+                             (om/set-state! owner
+                               :editContent (gm/to-gmark @elem tei))
+                             (om/set-state!
+                               owner
+                               :editText
+                               (not (om/get-state owner :editText))))}
+                 "Editer"))))
+
            (when (:editText state)
              (dom/textarea #js {:value (:editContent state)
                                 :cols "50" :rows "3"
@@ -130,7 +131,8 @@
                                                    mk/inner-tokens
                                                    (assoc el :content []))]
                                           new-el
-                                          el)))))})))
+                                          el)))))}))
+         
          (when (pos? (count (:content elem)))
            (apply dom/div #js {:className "block-contents col-md-10"}
              (om/build-all element-component (:content elem)))))))))
