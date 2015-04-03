@@ -61,7 +61,7 @@
            (dom/div nil
              (dom/h1 nil "Greffe")
              (when (:body app)
-               (dom/div #js {:id "edit"}
+               (dom/div #js {:id "edit" :className "container"}
                  (om/build dc/element-component (:body app))))
             
              (when (:body app)

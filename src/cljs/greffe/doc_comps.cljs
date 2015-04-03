@@ -17,7 +17,11 @@
     om/IRender
     (render [_]
       (apply dom/ul #js {:className "attributes"}
-       (map #(dom/li nil (str (first %) " " (second %))) attrs)))))
+        (map
+          #(dom/li nil
+             (dom/span #js {:className "attribute-name"} (str (name (first %)) ":"))
+             (dom/span #js {:className "attribute-value"} (second %)))
+          attrs)))))
 
 
 (defn is-multi? [el]
@@ -73,10 +77,11 @@
         (dom/div #js {:className "row"}
           (dom/div #js {:className "block-data col-md-1"}
             (dom/div #js {:className "name"} (name (:tag elem)))
-            (om/build element-attributes-component (:attrs elem)))
-          (when (pos? (count (:content elem)))
-            (apply dom/div #js {:className "block-contents col-md-10"}
-              (om/build-all element-component (:content elem)))))))))
+            (om/build element-attributes-component (:attrs elem))))
+        (when (pos? (count (:content elem)))
+          (dom/div #js {:className "row"}
+           (apply dom/div #js {:className "block-contents col-md-12"}
+             (om/build-all element-component (:content elem)))))))))
 
 
 (defmethod element-component :elem [elem owner]

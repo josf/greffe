@@ -10,11 +10,14 @@ div.block-data {
 
 div.tei-block {
     border: grey 1px dotted;
+    margin-top: 3px;
 }
 div.block-contents {
     padding-top: 0px;
 }
-
+div.tei-block.no-edit > div.row > div.block-contents {
+    margin-left: 0px;
+}
 ul.attributes {
     list-style-type: none;
     padding-left: 0;
@@ -54,10 +57,47 @@ textarea {
     margin-left: 10px;
 }
 
-span.attribute-name {
+
+div#xml span.attribute-name {
     padding-left: 0.5em;
     color: blue;
 }
-span.attribute-value {
+div#xml span.attribute-value {
     color: green;
+}
+
+div#edit ul.attributes, div#edit div.name {
+    margin: 0;
+    padding: 0;
+}
+
+div#edit span.attribute-name {
+    padding-right: 1em;
+    font-size: 8pt;
+    color: #888;
+    font-weight: bold;
+}
+div#edit span.attribute-value {
+    font-size: 8pt;
+    color: #888;
+}
+
+div#edit div.name {
+    font-size: 11pt;
+    color: #888;
+}
+
+div#edit .xml-text-element {
+    font-family: Times, "Times New Roman", serif;
+    font-size: 14pt;
+}
+
+div#edit div.controls {
+    position: absolute;
+    margin: 0;
+    padding: 2px;
+    background: #fff;
+    border: #ccc 1px solid;
+    left: 10px;
+    top: 2px;
 }
