@@ -113,8 +113,9 @@
              (dom/div #js {:className "controls"}
                (dom/a #js {:onClick
                            (fn [ev]
-                             (om/set-state! owner
-                               :editContent (gm/to-gmark @elem tei))
+                             (when-not (om/get-state owner :editText)
+                               (om/set-state! owner
+                                 :editContent (gm/to-gmark @elem tei)))
                              (om/set-state!
                                owner
                                :editText
