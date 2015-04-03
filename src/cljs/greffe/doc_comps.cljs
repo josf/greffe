@@ -1,7 +1,10 @@
 (ns greffe.doc-comps
+  (:require-macros [cljs.core.async.macros :refer [go alt! go-loop]])
   (:require
    [om.core :as om :include-macros true]
    [om.dom :as dom :include-macros true]
+   [cljs-uuid-utils.core :as uuid]
+   [cljs.core.async :refer [<! chan put! sub pub unsub sliding-buffer alts! mult tap untap]]
    [cljs-xml.core :as cx]
    [gmark.core :as gm]
    [gmark.tei-elems :as gmt]
@@ -83,7 +86,9 @@
     (init-state [_] {:hoverTimeout nil
                      :showButton false
                      :editText false    ; are we in editing mode?
-                     :editContent nil}) ; "cache" for editing content
+                     :editContent nil   ; "cache" for editing content
+                     :uuid (uuid/make-random-uuid)
+                     :local-edit-chan (chan)})          ; for subscribing 
     
     om/IRenderState
     (render-state [_ state]
@@ -113,9 +118,26 @@
              (dom/div #js {:className "controls"}
                (dom/a #js {:onClick
                            (fn [ev]
-                             (when-not (om/get-state owner :editText)
-                               (om/set-state! owner
-                                 :editContent (gm/to-gmark @elem tei)))
+                             (if-not (om/get-state owner :editText)
+                               (let [uuid  (om/get-state owner :uuid)
+                                     listening (sub
+                                                 (:notif-chan (om/get-shared owner))
+                                                 :open-edit (om/get-state owner :local-edit-chan))]
+                                (put! (:pub-chan (om/get-shared owner))
+                                  {:topic :open-edit
+                                   :message "Opening!"
+                                   :uuid uuid})
+                                (go-loop []
+                                  (let [msg (<! listening)]
+                                    (when-not (= uuid (:uuid msg))
+                                      (.log js/console (:message msg)))
+                                    (recur)))
+                                (om/set-state! owner
+                                  :editContent (gm/to-gmark @elem tei)))
+                               (unsub
+                                 (:notif-chan (om/get-shared owner))
+                                 :open-edit
+                                 (om/get-state owner :local-edit-chan)))
                              (om/set-state!
                                owner
                                :editText
