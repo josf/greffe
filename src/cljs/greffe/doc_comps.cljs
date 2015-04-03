@@ -123,7 +123,7 @@
 
            (when (:editText state)
              (dom/textarea #js {:value (:editContent state)
-                                :cols "50" :rows "3"
+                                :cols "50" :rows (if (is-multi? elem) "10" "3")
                                 :onChange
                                 (fn [ev]
                                   (let [new-val (-> ev .-target .-value)]
