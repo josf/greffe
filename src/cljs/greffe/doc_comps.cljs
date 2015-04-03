@@ -16,6 +16,11 @@
       (apply dom/ul #js {:className "attributes"}
        (map #(dom/li nil (str (first %) " " (second %))) attrs)))))
 
+
+(defn is-multi? [el]
+  "Is this element a multi-chunk element?"
+  (= :multi-chunk (get-in mk/markup [(:tag el) :type])))
+
 (defn dispatch-on-element-type [el]
   (let [val (om/value el)]
     (cond
