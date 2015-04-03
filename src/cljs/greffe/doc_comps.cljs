@@ -117,26 +117,36 @@
              (dom/div #js {:className "controls"}
                (dom/a #js {:onClick
                            (fn [ev]
-                             (if-not (om/get-state owner :editText)
+                              (om/set-state! owner
+                                  :editContent (gm/to-gmark @elem tei))
+                             (if (om/get-state owner :editText)
+
+                               ;; we are going to close the edit box,
+                               ;; so we quit listening to edit events
+                               (unsub
+                                 (:notif-chan (om/get-shared owner))
+                                 :open-edit
+                                 (om/get-state owner :local-edit-chan))
+
+                               ;; we are going to open the edit box,
+                               ;; so we start listening for other edit
+                               ;; events and we tell the other edit
+                               ;; boxes that we are opening. The uuid
+                               ;; ensures that we don't listen to ourselves.
                                (let [uuid  (om/get-state owner :uuid)
                                      listening (sub
                                                  (:notif-chan (om/get-shared owner))
                                                  :open-edit (om/get-state owner :local-edit-chan))]
                                 (put! (:pub-chan (om/get-shared owner))
                                   {:topic :open-edit
-                                   :message "Opening!"
+                                   :message :open
                                    :uuid uuid})
                                 (go-loop []
                                   (let [msg (<! listening)]
                                     (when-not (= uuid (:uuid msg))
-                                      (.log js/console (:message msg)))
+                                      (om/set-state! owner :editText false))
                                     (recur)))
-                                (om/set-state! owner
-                                  :editContent (gm/to-gmark @elem tei)))
-                               (unsub
-                                 (:notif-chan (om/get-shared owner))
-                                 :open-edit
-                                 (om/get-state owner :local-edit-chan)))
+                               ))
                              (om/set-state!
                                owner
                                :editText
