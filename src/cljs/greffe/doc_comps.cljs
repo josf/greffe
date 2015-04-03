@@ -99,7 +99,6 @@
                         (.setTimeout
                           js/window
                           (fn []
-                            (.log js/console "show button true")
                             (om/set-state! owner :showButton true))
                           200)))
                     :onMouseLeave
