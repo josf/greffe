@@ -131,10 +131,12 @@
                                     (om/transact! elem
                                       (fn [el]
                                         (if-let [new-el
-                                                 (gm/parse-gmark-text
-                                                   new-val
-                                                   mk/inner-tokens
-                                                   (assoc el :content []))]
+                                                 (if (is-multi? el)
+                                                   (gm/parse-gmark-multi-text new-val tei el)
+                                                   (gm/parse-gmark-text
+                                                     new-val
+                                                     mk/inner-tokens
+                                                     (assoc el :content [])))]
                                           new-el
                                           el)))))}))
          
