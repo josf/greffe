@@ -19,6 +19,7 @@
                  [com.cemerick/piggieback "0.2.0"]
                  [weasel "0.6.0"]
                  [leiningen "2.5.1"]
+                 [com.lucasbradstreet/cljs-uuid-utils "1.0.1"]
                  [cljs-xml "0.1.0-SNAPSHOT"]
                  [gmark "0.1.0-SNAPSHOT"]]
 
