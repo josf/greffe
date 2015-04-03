@@ -112,45 +112,45 @@
          (dom/div #js {:className "block-data col-md-1"}
            (dom/div #js {:className "name"}
              (name (:tag elem)))
-           (om/build element-attributes-component (:attrs elem))
-           (when (:showButton state)
-             (dom/div #js {:className "controls"}
-               (dom/a #js {:onClick
-                           (fn [ev]
-                              (om/set-state! owner
-                                  :editContent (gm/to-gmark @elem tei))
-                             (if (om/get-state owner :editText)
+           (om/build element-attributes-component (:attrs elem)))
+         (when (:showButton state)
+           (dom/div #js {:className "controls"}
+             (dom/a #js {:onClick
+                         (fn [ev]
+                           (om/set-state! owner
+                             :editContent (gm/to-gmark @elem tei))
+                           (if (om/get-state owner :editText)
 
-                               ;; we are going to close the edit box,
-                               ;; so we quit listening to edit events
-                               (unsub
-                                 (:notif-chan (om/get-shared owner))
-                                 :open-edit
-                                 (om/get-state owner :local-edit-chan))
+                             ;; we are going to close the edit box,
+                             ;; so we quit listening to edit events
+                             (unsub
+                               (:notif-chan (om/get-shared owner))
+                               :open-edit
+                               (om/get-state owner :local-edit-chan))
 
-                               ;; we are going to open the edit box,
-                               ;; so we start listening for other edit
-                               ;; events and we tell the other edit
-                               ;; boxes that we are opening. The uuid
-                               ;; ensures that we don't listen to ourselves.
-                               (let [uuid  (om/get-state owner :uuid)
-                                     listening (sub
-                                                 (:notif-chan (om/get-shared owner))
-                                                 :open-edit (om/get-state owner :local-edit-chan))]
-                                (put! (:pub-chan (om/get-shared owner))
-                                  {:topic :open-edit
-                                   :message :open
-                                   :uuid uuid})
-                                (go-loop []
-                                  (let [msg (<! listening)]
-                                    (when-not (= uuid (:uuid msg))
-                                      (om/set-state! owner :editText false))
-                                    (recur)))))
-                             (om/set-state!
-                               owner
-                               :editText
-                               (not (om/get-state owner :editText))))}
-                 "Editer"))))
+                             ;; we are going to open the edit box,
+                             ;; so we start listening for other edit
+                             ;; events and we tell the other edit
+                             ;; boxes that we are opening. The uuid
+                             ;; ensures that we don't listen to ourselves.
+                             (let [uuid  (om/get-state owner :uuid)
+                                   listening (sub
+                                               (:notif-chan (om/get-shared owner))
+                                               :open-edit (om/get-state owner :local-edit-chan))]
+                               (put! (:pub-chan (om/get-shared owner))
+                                 {:topic :open-edit
+                                  :message :open
+                                  :uuid uuid})
+                               (go-loop []
+                                 (let [msg (<! listening)]
+                                   (when-not (= uuid (:uuid msg))
+                                     (om/set-state! owner :editText false))
+                                   (recur)))))
+                           (om/set-state!
+                             owner
+                             :editText
+                             (not (om/get-state owner :editText))))}
+               "Editer")))
 
            (when (:editText state)
              (dom/textarea #js {:value (:editContent state)
