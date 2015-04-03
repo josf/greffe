@@ -145,8 +145,7 @@
                                   (let [msg (<! listening)]
                                     (when-not (= uuid (:uuid msg))
                                       (om/set-state! owner :editText false))
-                                    (recur)))
-                               ))
+                                    (recur)))))
                              (om/set-state!
                                owner
                                :editText
